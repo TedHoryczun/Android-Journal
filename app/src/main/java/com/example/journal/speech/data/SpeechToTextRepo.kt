@@ -3,13 +3,21 @@ package com.example.journal.speech.data
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
+import android.speech.SpeechRecognizer.ERROR_NO_MATCH
+import android.speech.SpeechRecognizer.ERROR_SPEECH_TIMEOUT
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class SpeechToTextRepo : RecognitionListener {
     val state = MutableStateFlow(SpeechState.NOT_LISTENING)
     val partialResults = MutableStateFlow("")
     val fullResults = MutableStateFlow("")
+    override fun onEndOfSegmentedSession() {
+        super.onEndOfSegmentedSession()
+        state.value = SpeechState.NOT_LISTENING
+    }
+
     override fun onReadyForSpeech(bundle: Bundle?) {
+        state.value = SpeechState.LISTENING
     }
 
     override fun onBeginningOfSpeech() {
@@ -23,9 +31,15 @@ class SpeechToTextRepo : RecognitionListener {
     }
 
     override fun onEndOfSpeech() {
+        state.value = SpeechState.NOT_LISTENING
     }
 
-    override fun onError(p0: Int) {
+    override fun onError(error: Int) {
+        if (state.value == SpeechState.LISTENING &&
+            (error == ERROR_NO_MATCH || error == ERROR_SPEECH_TIMEOUT)
+        ) {
+            state.value = SpeechState.NOT_LISTENING
+        }
     }
 
     override fun onResults(results: Bundle?) {
@@ -35,6 +49,7 @@ class SpeechToTextRepo : RecognitionListener {
             fullResults.value = text
             println("speech-to-text: $text")
         }
+        state.value = SpeechState.NOT_LISTENING
     }
 
     override fun onPartialResults(results: Bundle?) {
@@ -47,10 +62,6 @@ class SpeechToTextRepo : RecognitionListener {
     }
 
     override fun onEvent(p0: Int, event: Bundle?) {
-    }
-
-    private fun clear() {
-        partialResults.value = ""
-        state.value = SpeechState.NOT_LISTENING
+        println("event")
     }
 }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    kotlin("kapt")
 }
 
 android {
@@ -24,7 +25,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion ="1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 
 
@@ -80,7 +81,9 @@ dependencies {
     implementation(libs.camposer)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
     implementation(libs.hilt)
-    annotationProcessor(libs.hilt.compiler)
-
-
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt(libs.hilt.compiler)
+}
+kapt {
+    correctErrorTypes = true
 }

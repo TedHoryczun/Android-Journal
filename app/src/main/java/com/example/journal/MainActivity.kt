@@ -19,7 +19,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +39,8 @@ class MainActivity : ComponentActivity() {
                         listOf(android.Manifest.permission.RECORD_AUDIO)
                     )
                     if (cameraPermissionState.allPermissionsGranted) {
-                        Column {
-                            val context = LocalContext.current
-                            SpeechToText(context, speechToTextRepo)
-                        }
+                        val context = LocalContext.current
+                        SpeechToText(context)
                     } else {
                         Column {
                             val textToShow =

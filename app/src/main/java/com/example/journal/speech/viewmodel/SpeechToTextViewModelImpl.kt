@@ -8,29 +8,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.journal.speech.data.SpeechToTextRepo
 import com.example.journal.speech.data.SpeechToTextResults
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SpeechToTextViewModelImpl(
-    context: Context,
-    val speechToTextRepo: SpeechToTextRepo = SpeechToTextRepo()
+@HiltViewModel
+class SpeechToTextViewModelImpl @Inject constructor(
+    var speechToTextRepo: SpeechToTextRepo,
+    var speechRecog: SpeechRecognizer
 ) : ViewModel(), SpeechToTextViewModel {
     override val speechToTextResults =
         MutableStateFlow(SpeechToTextResults())
-    private val speechRecog = SpeechRecognizer.createSpeechRecognizer(context)
 
     private fun observe() {
         speechRecog.setRecognitionListener(speechToTextRepo)
         viewModelScope.launch {
+            speechToTextRepo.state.collectLatest {
+                speechToTextResults.value = speechToTextResults.value.copy(state = it)
+            }
             speechToTextRepo.fullResults.collectLatest {
                 speechToTextResults.value = speechToTextResults.value.copy(fullResults = it)
             }
             speechToTextRepo.partialResults.collectLatest {
                 speechToTextResults.value = speechToTextResults.value.copy(partialResults = it)
-            }
-            speechToTextRepo.state.collectLatest {
-                speechToTextResults.value = speechToTextResults.value.copy(state = it)
             }
         }
 
@@ -44,8 +46,10 @@ class SpeechToTextViewModelImpl(
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
                 )
             }
-        speechRecog.startListening(recognizerIntent)
-        observe()
+        if (SpeechRecognizer.isRecognitionAvailable(context)) {
+            speechRecog.startListening(recognizerIntent)
+            observe()
+        }
 
     }
 }
