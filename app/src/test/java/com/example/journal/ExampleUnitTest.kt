@@ -1,6 +1,5 @@
 package com.example.journal
 
-import com.example.journal.speech.ui.matchForEnglish
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -14,9 +13,5 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
-    }
-    @Test
-    fun testMatch(){
-       matchForEnglish("I will make my dog walk tomorrow people are going")
     }
 }
