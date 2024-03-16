@@ -11,13 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journal.speech.data.SpeechState
-import com.example.journal.speech.viewmodel.SpeechToTextViewModelImpl
+import com.example.journal.speech.ui.viewmodel.SpeechToTextViewModelImpl
 
 @Composable
 fun SpeechToText(context: Context, viewModel: SpeechToTextViewModelImpl = viewModel()) {
@@ -31,7 +30,7 @@ fun SpeechToText(context: Context, viewModel: SpeechToTextViewModelImpl = viewMo
             "Stop Listening"
         }
         Box(Modifier.height(500.dp)) {
-            Text(text = text, modifier = Modifier.align(Alignment.TopStart))
+            EnglishTextComposable(text = text, modifier = Modifier.align(Alignment.TopStart))
         }
         Button(
             modifier = Modifier.align(Alignment.BottomCenter),

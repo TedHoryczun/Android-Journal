@@ -1,4 +1,4 @@
-package com.example.journal.speech
+package com.example.journal.speech.di
 
 import android.content.Context
 import android.speech.SpeechRecognizer

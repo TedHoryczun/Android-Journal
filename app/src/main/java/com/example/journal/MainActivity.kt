@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.journal.speech.data.SpeechToTextRepo
 import com.example.journal.speech.ui.SpeechToText
-import com.example.journal.speech.viewmodel.SpeechToTextViewModelImpl
+import com.example.journal.speech.ui.viewmodel.SpeechToTextViewModelImpl
 import com.example.journal.ui.theme.JournalTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -28,23 +28,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val speechToTextRepo = SpeechToTextRepo()
             JournalTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val cameraPermissionState = rememberMultiplePermissionsState(
+                    val permissions = rememberMultiplePermissionsState(
                         listOf(android.Manifest.permission.RECORD_AUDIO)
                     )
-                    if (cameraPermissionState.allPermissionsGranted) {
+                    if (permissions.allPermissionsGranted) {
                         val context = LocalContext.current
                         SpeechToText(context)
                     } else {
                         Column {
                             val textToShow =
-                                if (cameraPermissionState.permissions[0].status.shouldShowRationale) {
+                                if (permissions.permissions[0].status.shouldShowRationale) {
                                     "The camera is important for this app. Please grant the permission."
                                 } else {
                                     "Camera permission required for this feature to be available. " +
@@ -52,8 +51,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             Text(textToShow)
                             Button(onClick = {
-                                cameraPermissionState.launchMultiplePermissionRequest()
-
+                                permissions.launchMultiplePermissionRequest()
                             }) {
                                 Text("Request permission")
                             }

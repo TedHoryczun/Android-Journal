@@ -1,4 +1,4 @@
-package com.example.journal.speech.viewmodel
+package com.example.journal.speech.ui.viewmodel
 
 import android.content.Context
 import com.example.journal.speech.data.SpeechState
