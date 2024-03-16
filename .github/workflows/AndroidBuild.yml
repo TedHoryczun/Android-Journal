@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           java-version: '18'
+          distribution: 'corretto'
 
       - name: Build With Gradle
         run: ./gradlew build
