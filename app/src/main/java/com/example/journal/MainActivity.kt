@@ -38,18 +38,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val vm: SpeechToTextViewModel by viewModels()
+    val vm: SpeechToTextViewModelImpl by viewModels()
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.speechToTextResults.collectLatest { speechRes ->
-
-                }
-
-            }
-        }
         setContent {
             JournalTheme {
                 // A surface container using the 'background' color from the theme
@@ -64,7 +56,8 @@ class MainActivity : ComponentActivity() {
                         SpeechToText(vm::getEnglishWordsFromText)
                     } else {
                         Column {
-                            val djd by vm.speechToTextResults.collectAsStateWithLifecycle()
+                            val res by vm.speechToTextResults.collectAsStateWithLifecycle()
+
                             val textToShow =
                                 if (permissions.permissions[0].status.shouldShowRationale) {
                                     "The camera is important for this app. Please grant the permission."

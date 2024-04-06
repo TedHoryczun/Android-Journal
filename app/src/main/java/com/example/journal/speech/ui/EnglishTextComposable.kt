@@ -20,14 +20,11 @@ import com.example.journal.speech.ui.viewmodel.MockSpeechToTextViewModel
 import com.example.journal.speech.ui.viewmodel.SpeechToTextViewModel
 
 
-@Composable
 fun EnglishAnnotatedString(
     text: String,
     addSpeechToString: (string: String) -> SnapshotStateList<AnnotatedString.Range<String>>
 ): AnnotatedString {
-    val annontatedStringList = remember {
-        addSpeechToString(text)
-    }
+    val annontatedStringList = addSpeechToString(text)
     return buildAnnotatedString {
         annontatedStringList.forEach {
             when (it.tag) {
