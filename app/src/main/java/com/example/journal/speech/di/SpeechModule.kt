@@ -2,6 +2,7 @@ package com.example.journal.speech.di
 
 import android.content.Context
 import android.speech.SpeechRecognizer
+import com.example.journal.speech.data.EnglishRepo
 import com.example.journal.speech.data.SpeechToTextRepo
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,11 @@ class SpeechModule {
     @Singleton
     fun provideSpeechToTextRepo(): SpeechToTextRepo {
         return SpeechToTextRepo()
+    }
+    @Provides
+    @Singleton
+    fun provideEnglishRepo(): EnglishRepo {
+        return EnglishRepo()
     }
     @Provides
     @Singleton

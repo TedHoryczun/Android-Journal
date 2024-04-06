@@ -1,42 +1,69 @@
 package com.example.journal.speech.ui
 
-import android.content.Context
-import android.speech.SpeechRecognizer
+import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.journal.speech.data.SpeechState
+import com.example.journal.speech.ui.viewmodel.MockSpeechToTextViewModel
 import com.example.journal.speech.ui.viewmodel.SpeechToTextViewModelImpl
+import com.example.journal.ui.theme.JournalTheme
+import com.example.journal.ui.theme.LocalSpacing
+import spacing
 
 @Composable
-fun SpeechToText(context: Context, viewModel: SpeechToTextViewModelImpl = viewModel()) {
-    Box(Modifier.fillMaxSize()) {
-        val results by viewModel.speechToTextResults.collectAsState()
-        val text = results.fullResults.ifEmpty { results.partialResults }
-        val state = results.state
-        val listeningButtonText = if (state == SpeechState.NOT_LISTENING) {
-            "Start Listening"
-        } else {
-            "Stop Listening"
-        }
+fun SpeechToText(
+    addSpeechToString: (string: String) -> SnapshotStateList<AnnotatedString.Range<String>>,
+    initTextValue: String = ""
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(spacing.medium)
+    ) {
+        var textValue by remember { mutableStateOf(initTextValue) }
         Box(Modifier.height(500.dp)) {
-            EnglishTextComposable(text = text, modifier = Modifier.align(Alignment.TopStart))
+            Column {
+
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = TextFieldValue(
+                        EnglishAnnotatedString(
+                            text = textValue,
+                            addSpeechToString
+                        )
+                    ),
+                    onValueChange = { textValue = it.text })
+            }
         }
-        Button(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = { viewModel.startListening(context) })
-        {
-            Text(text = listeningButtonText)
-        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun PreviewSpeechToText() {
+    JournalTheme {
+        val vm = MockSpeechToTextViewModel()
+        SpeechToText(
+            vm::getEnglishWordsFromText,
+            "I will make my dog walk tomorrow people are going strong "
+        )
     }
 }
