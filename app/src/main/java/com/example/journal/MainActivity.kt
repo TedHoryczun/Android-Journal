@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val vm: SpeechToTextViewModelImpl by viewModels()
+
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +54,15 @@ class MainActivity : ComponentActivity() {
                         listOf(android.Manifest.permission.RECORD_AUDIO)
                     )
                     if (permissions.allPermissionsGranted) {
-                        SpeechToText(vm::getEnglishWordsFromText)
+                        val textFromSpeech by vm.speechToTextResults.collectAsStateWithLifecycle()
+                        if (textFromSpeech.fullResults.isNotEmpty()) {
+                            SpeechToText(vm::getEnglishWordsFromText, textFromSpeech.fullResults)
+                        } else {
+                            SpeechToText(vm::getEnglishWordsFromText)
+
+                        }
                     } else {
                         Column {
-                            val res by vm.speechToTextResults.collectAsStateWithLifecycle()
 
                             val textToShow =
                                 if (permissions.permissions[0].status.shouldShowRationale) {

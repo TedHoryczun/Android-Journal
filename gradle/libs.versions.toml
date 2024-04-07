@@ -13,6 +13,7 @@ composeBom = "2024.02.02"
 appcompat = "1.6.1"
 material = "1.11.0"
 hilt = "2.51"
+uiTestCompose = "1.6.5"
 
 
 [libraries]
@@ -37,6 +38,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestCompose" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

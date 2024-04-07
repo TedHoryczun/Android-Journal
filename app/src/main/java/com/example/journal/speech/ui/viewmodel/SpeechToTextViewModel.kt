@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.MutableStateFlow
 interface SpeechToTextViewModel {
     fun startListening(context: Context)
     val speechToTextResults: MutableStateFlow<SpeechToTextResults>
-    fun getEnglishWordsFromText(text: String): SnapshotStateList<AnnotatedString.Range<String>>
+    fun getEnglishWordsFromText(text: String): AnnotatedString
 }

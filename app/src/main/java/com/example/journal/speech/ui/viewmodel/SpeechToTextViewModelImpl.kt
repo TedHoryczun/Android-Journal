@@ -47,7 +47,7 @@ class SpeechToTextViewModelImpl @Inject constructor(
 
     }
 
-    override fun getEnglishWordsFromText(text: String): SnapshotStateList<AnnotatedString.Range<String>> {
+    override fun getEnglishWordsFromText(text: String): AnnotatedString {
         return englishRepo.getEnglishWordsFromString(text)
 
     }

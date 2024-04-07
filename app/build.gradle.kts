@@ -73,7 +73,12 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.3")
 
+
+
     testImplementation(libs.junit)
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.test.manifest)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

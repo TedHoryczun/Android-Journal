@@ -12,7 +12,7 @@ class MockSpeechToTextViewModel : SpeechToTextViewModel{
     }
 
     override val speechToTextResults: MutableStateFlow<SpeechToTextResults> = MutableStateFlow(SpeechToTextResults())
-    override fun getEnglishWordsFromText(text: String): SnapshotStateList<AnnotatedString.Range<String>> {
+    override fun getEnglishWordsFromText(text: String): AnnotatedString {
         return EnglishRepo().getEnglishWordsFromString(text)
     }
 }

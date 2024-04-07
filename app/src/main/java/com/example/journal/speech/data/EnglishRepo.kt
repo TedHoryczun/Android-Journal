@@ -2,10 +2,14 @@ package com.example.journal.speech.data
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 
 class EnglishRepo {
-    fun getEnglishWordsFromString(text: String): SnapshotStateList<AnnotatedString.Range<String>> {
+    fun getEnglishWordsFromString(text: String): AnnotatedString {
         val verbsList = English.commonVerbs.joinToString(separator = " | ")
         val nounList = English.commonNouns.joinToString(separator = " | ")
         val adjectiveList = English.commonAdjectives.joinToString(separator = " | ")
@@ -32,8 +36,30 @@ class EnglishRepo {
                 )
             )
         }
-        return annotatedStringList
+        return addColorsToString(annotatedStringList)
 
+    }
+
+    private fun addColorsToString(text: SnapshotStateList<AnnotatedString.Range<String>>): AnnotatedString {
+        return buildAnnotatedString {
+            text.forEach {
+                when (it.tag) {
+                    "verb" -> addDesignToWord(this, it, Color.Red)
+                    "noun" -> addDesignToWord(this, it, Color.Blue)
+                    "adjective" -> addDesignToWord(this, it, Color.Green)
+                    else -> withStyle(style = SpanStyle()) { append(it.item) }
+                }
+            }
+        }
+
+    }
+
+    private fun addDesignToWord(
+        builder: AnnotatedString.Builder, text: AnnotatedString.Range<String>, color: Color
+    ) {
+        builder.pushStringAnnotation(tag = text.tag, annotation = text.item)
+        builder.withStyle(style = SpanStyle(color = color)) { append(text.item) }
+        builder.pop()
     }
 
     private fun regexMatch(listOfWords: String, match: MatchResult): Boolean {
